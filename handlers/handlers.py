@@ -4,6 +4,7 @@ from keyboards.keyboards import *
 from aiogram import types
 from loader import dp, bot, db
 
+
 pages = {}  # user_id:page
 
 
@@ -28,14 +29,14 @@ async def get_books(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(text='genre_search')
-async def get_books(call: types.CallbackQuery):
+async def get_books_by_genre(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
     genres = await db.select_all_genres()
     await bot.send_message(call.message.chat.id, 'Жанры', reply_markup=genres_kb(genres))
 
 
 @dp.callback_query_handler(lambda text: text.data.startswith('gnr'))
-async def get_book(call: types.CallbackQuery):
+async def get_books_by_genre_listener(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
     genre = call.data.split("_")[-1]
     books = await db.select_book_by_genre(genre)
@@ -44,9 +45,8 @@ async def get_book(call: types.CallbackQuery):
     await bot.send_message(call.message.chat.id, f"{genre}: ", reply_markup=books_kb(books, page, True))
 
 
-
 @dp.callback_query_handler(text='page_next')
-async def get_books(call: types.CallbackQuery):
+async def get_books_next_page(call: types.CallbackQuery):
     books = await db.select_all_books()
     page = pages[call.message.chat.id]
     if len(books[page*10:page*10+10]) < page*10:
@@ -54,11 +54,12 @@ async def get_books(call: types.CallbackQuery):
     else:
         pages[call.message.chat.id] += 1
         page = pages[call.message.chat.id]
-        await bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=books_kb(books, page))
+        await bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
+                                            reply_markup=books_kb(books, page))
 
 
 @dp.callback_query_handler(text='page_back')
-async def get_books(call: types.CallbackQuery):
+async def get_books_previous_page(call: types.CallbackQuery):
     books = await db.select_all_books()
     page = pages[call.message.chat.id]
     if page == 0:
@@ -66,7 +67,8 @@ async def get_books(call: types.CallbackQuery):
     else:
         pages[call.message.chat.id] -= 1
         page = pages[call.message.chat.id]
-        await bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=books_kb(books, page))
+        await bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
+                                            reply_markup=books_kb(books, page))
 
 
 @dp.callback_query_handler(lambda text: text.data.startswith('book'))
@@ -98,7 +100,7 @@ async def find_book(call: types.CallbackQuery):
 
 
 @dp.message_handler(state=FindBook.phrase)
-async def find_book(message: types.Message, state: FSMContext):
+async def find_book_next(message: types.Message, state: FSMContext):
     await state.finish()
     key = message.text
     books = await db.find_book(key)
@@ -117,7 +119,7 @@ async def add_book(call: types.CallbackQuery):
 
 
 @dp.message_handler(state=AddBook.name)
-async def add_book(message: types.Message, state: FSMContext):
+async def add_book_name(message: types.Message, state: FSMContext):
     name = message.text
     await state.update_data(name=name)
     await message.answer('Введите автора книги: ')
@@ -125,7 +127,7 @@ async def add_book(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=AddBook.author)
-async def add_book(message: types.Message, state: FSMContext):
+async def add_book_author(message: types.Message, state: FSMContext):
     author = message.text
     genres = await db.select_all_genres()
     await state.update_data(author=author)
@@ -134,21 +136,21 @@ async def add_book(message: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(state=AddBook.genre)
-async def add_book(call: types.CallbackQuery, state: FSMContext):
+async def add_book_genre_c(call: types.CallbackQuery, state: FSMContext):
     await state.update_data(genre=call.data.split("_")[-1])
     await bot.send_message(call.message.chat.id, 'Введите описание книги: ')
     await AddBook.description.set()
 
 
 @dp.message_handler(state=AddBook.genre)
-async def add_book(message: types.Message, state: FSMContext):
+async def add_book_genre_m(message: types.Message, state: FSMContext):
     await state.update_data(genre=message.text)
     await message.answer('Введите описание книги')
     await AddBook.description.set()
 
 
 @dp.message_handler(state=AddBook.description)
-async def add_book(message: types.Message, state: FSMContext):
+async def add_book_description(message: types.Message, state: FSMContext):
     await state.update_data(description=message.text)
     data = await state.get_data()
     await message.answer(f'Книга: {data["name"]}\n'
@@ -159,7 +161,7 @@ async def add_book(message: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(state=AddBook.confirm)
-async def add_book(call: types.CallbackQuery, state: FSMContext):
+async def add_book_confirm(call: types.CallbackQuery, state: FSMContext):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
     if call.data == 'add_confirm':
         data = await state.get_data()
@@ -171,6 +173,3 @@ async def add_book(call: types.CallbackQuery, state: FSMContext):
     else:
         await bot.send_message(call.message.chat.id, "Книга не добавлена", reply_markup=menu())
     await state.finish()
-    # print(call.data)
-
-

@@ -19,7 +19,8 @@ def books_kb(books, page, search=False):
     for book in books[page*10:page*10+10]:
         print(book)
         keyboard.add(
-            types.InlineKeyboardButton(text=f'{book["name"]} | {book["author"]}', callback_data=f"book_{str(book['book_id'])}")
+            types.InlineKeyboardButton(text=f'{book["name"]} | {book["author"]}',
+                                       callback_data=f"book_{str(book['book_id'])}")
         )
     if search is False:
         keyboard.row(
@@ -74,4 +75,3 @@ def confirm():
         types.InlineKeyboardButton(text='Отмена❌', callback_data="add_cancel")
     )
     return keyboards
-
