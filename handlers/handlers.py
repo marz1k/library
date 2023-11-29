@@ -8,17 +8,20 @@ from loader import dp, bot, db
 pages = {}  # user_id:page
 
 
+# Start
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     await message.answer('Добро пожаловать в библиотеку📚!', reply_markup=menu())
 
 
+# Return to menu button
 @dp.callback_query_handler(text='to_menu')
 async def to_menu(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
     await bot.send_message(call.message.chat.id, 'Меню', reply_markup=menu())
 
 
+# Return to book list button
 @dp.callback_query_handler(text=['get_books', 'back_to_list'])
 async def get_books(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -28,6 +31,7 @@ async def get_books(call: types.CallbackQuery):
     await bot.send_message(call.message.chat.id, "Книги: ", reply_markup=books_kb(books, page))
 
 
+# Searching books by genre
 @dp.callback_query_handler(text='genre_search')
 async def get_books_by_genre(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -35,6 +39,7 @@ async def get_books_by_genre(call: types.CallbackQuery):
     await bot.send_message(call.message.chat.id, 'Жанры', reply_markup=genres_kb(genres))
 
 
+# Searching books by genre
 @dp.callback_query_handler(lambda text: text.data.startswith('gnr'))
 async def get_books_by_genre_listener(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -45,6 +50,7 @@ async def get_books_by_genre_listener(call: types.CallbackQuery):
     await bot.send_message(call.message.chat.id, f"{genre}: ", reply_markup=books_kb(books, page, True))
 
 
+# Pagination
 @dp.callback_query_handler(text='page_next')
 async def get_books_next_page(call: types.CallbackQuery):
     books = await db.select_all_books()
@@ -71,6 +77,7 @@ async def get_books_previous_page(call: types.CallbackQuery):
                                             reply_markup=books_kb(books, page))
 
 
+# Getting info about book
 @dp.callback_query_handler(lambda text: text.data.startswith('book'))
 async def get_book(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -84,6 +91,7 @@ async def get_book(call: types.CallbackQuery):
                            parse_mode='HTML', reply_markup=book_options(book_id))
 
 
+# Deleting book
 @dp.callback_query_handler(lambda text: text.data.startswith('delete'))
 async def delete_book(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -92,6 +100,7 @@ async def delete_book(call: types.CallbackQuery):
     await bot.send_message(call.message.chat.id, f'Книга удалена.', parse_mode='HTML', reply_markup=menu())
 
 
+# Finding book by key-phrase
 @dp.callback_query_handler(text='find_book')
 async def find_book(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -111,6 +120,7 @@ async def find_book_next(message: types.Message, state: FSMContext):
         await message.answer('Книг не найдено', reply_markup=menu())
 
 
+# Adding book
 @dp.callback_query_handler(text='add_book')
 async def add_book(call: types.CallbackQuery):
     await bot.delete_message(call.message.chat.id, call.message.message_id)

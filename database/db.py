@@ -58,7 +58,7 @@ class DataBase:
         await con.close()
         return data
 
-    async def add_book(self, name, author, genre, description):
+    async def add_book(self, name: str, author: str, genre: str, description: str):
         con = await sql.connect(
             host=self.host,
             port=self.port,
@@ -67,12 +67,15 @@ class DataBase:
             password=self.password)
         await con.execute("INSERT INTO books(name, author, genre, description) VALUES($1, $2, $3, $4)",
                           name, author, genre, description)
+
+        # Checking if genre already in GENRES table. If not -> adding.
         genres = await con.fetch("SELECT genre FROM genres WHERE genre = $1", genre)
         if len(genres) == 0:
             await con.execute("INSERT INTO genres(genre) VALUES($1)", genre)
+
         await con.close()
 
-    async def delete_book(self, book_id):
+    async def delete_book(self, book_id: int):
         con = await sql.connect(
             host=self.host,
             port=self.port,
@@ -82,7 +85,7 @@ class DataBase:
         await con.execute("DELETE FROM books WHERE book_id = $1", book_id)
         await con.close()
 
-    async def find_book(self, key):
+    async def find_book(self, key: str):
         con = await sql.connect(
             host=self.host,
             port=self.port,
@@ -104,7 +107,7 @@ class DataBase:
         data = await con.fetch("SELECT * FROM books")
         return data
 
-    async def select_book_by_genre(self, genre):
+    async def select_book_by_genre(self, genre: str):
         con = await sql.connect(
             host=self.host,
             port=self.port,
@@ -114,7 +117,7 @@ class DataBase:
         data = await con.fetch("SELECT * FROM books WHERE genre = $1", genre)
         return data
 
-    async def select_book_by_id(self, book_id):
+    async def select_book_by_id(self, book_id: int):
         con = await sql.connect(
             host=self.host,
             port=self.port,
@@ -133,7 +136,3 @@ class DataBase:
             password=self.password)
         data = await con.fetch("SELECT genre FROM genres")
         return data
-
-    # async def get_genres(self):
-
-# asyncio.run(db())

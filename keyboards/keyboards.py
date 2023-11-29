@@ -1,6 +1,7 @@
 from aiogram import types
 
 
+# Menu keyboard
 def menu():
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row(
@@ -13,7 +14,14 @@ def menu():
     return keyboard
 
 
+# Books list keyboard
 def books_kb(books, page, search=False):
+    """
+    :param books: list of books to show.
+    :param page: current page
+    :param search: True - using by tapping "search book by genre". False - using by tapping "books list"
+    :return:
+    """
     keyboard = types.InlineKeyboardMarkup()
     print(books[page*10:page*10+10])
     for book in books[page*10:page*10+10]:
@@ -39,7 +47,12 @@ def books_kb(books, page, search=False):
     return keyboard
 
 
+# Book option keyboard
 def book_options(book_id):
+    """
+    :param book_id: ID given to book in DB
+    :return:
+    """
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(
         types.InlineKeyboardButton(text='Удалить книгу', callback_data=f"delete_{book_id}")
@@ -50,7 +63,12 @@ def book_options(book_id):
     return keyboard
 
 
+# List of genres keyboard
 def genres_kb(genres):
+    """
+    :param genres: list of genres
+    :return:
+    """
     print(genres)
     keyboard = types.InlineKeyboardMarkup()
     if len(genres) > 0:
@@ -68,6 +86,7 @@ def genres_kb(genres):
         )
 
 
+# Adding book
 def confirm():
     keyboards = types.InlineKeyboardMarkup()
     keyboards.row(
