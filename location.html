@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <title>Locations</title>
+        <link rel="stylesheet" type="text/css" href="css/location.css" />
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <header>
+            <div class="navigation">
+              <nav>
+                <div class="nav-tabs">
+                  <ul>
+                    <li id="top"><a href="./accueil.html">Accueil</a></li>
+                    <li id="logout-but" style="left: 90%">
+                      <a class="logout-but" href="login.html">Log Out</a>
+                    </li>
+                  </ul>
+                  <div class="clr"></div>
+                </div>
+              </nav>
+            </div>
+        </header>
+        <div class="searchbar">
+            <input type="search" placeholder="Vélo électrique">
+            <button type="submit">Chercher</button>
+            <div class="filter">
+                    <br>
+                    Prix
+                    <!-- <label for="prix">Prix:</label> -->
+                    <label for="prix-start">de:</label>
+                    <input id="prix-start" type="number" min="0" max="999" value="10">
+                    <label for="prix-end">a</label>
+                    <input id="prix-end" type="number" min="0" max="999" value="50">
+                    euros.
+                    <br>
+                    Duree de location
+                    <!-- <label for="prix">Prix:</label> -->
+                    <label for="loc-start">de:</label>
+                    <input id="loc-start" type="number" min="0" max="999" value="1">
+                    <label for="loc-end">a</label>
+                    <input id="loc-end" type="number" min="0" max="999" value="5">
+                    jours.
+            </div>
+        </div>
+        <main>
+            <div class="Offre">
+                <h1>Offre de Vélo</h1>
+                <div class="liste"></div>
+                <ul>
+                    <li><a href="./Confirmation.html"><strong>Vélo 1</strong></a> 
+                        <ul>
+                            <li>Vélo de renommé, champion du monde d'inultilité. Prix 500€</li>
+                        </ul>
+                        <!-- <img src="./img/buenobike.jpg"></a> -->
+                    </li>
+                    <li><a href="./Confirmation.html"><strong>Vélo 2</strong></a>
+                        <ul>
+                            <li>Vélo cheap, pour les pauvres. Prix 5€</li>
+                        </ul>
+                        <!-- <img href="./img/velonul.jpg"></img> -->
+                    </li>
+                    <li><a href="./Confirmation.html"><strong>Vélo 3</strong></a>
+                        <ul>
+                            <li>Vélo avec une chance sur deux de mourir. Prix 80€</li>
+                        </ul>
+                    </li>
+                </ul>
+                <h1>Offre de Vélo électrique</h1>
+                <div class="liste"></div>
+                <ul>
+                    <li><a href="./Confirmation.html"><strong>Vélo éléctrique 1</strong></a>
+                        <ul>
+                            <li>Vélo de renommé, champion du monde d'inultilité. Prix 750€</li>
+                        </ul>
+                    </li>
+                    <li><a href="./Confirmation.html"><strong>Vélo éléctrique 2</strong></a>
+                        <ul>
+                            <li>Vélo cheap, pour les pauvres. Prix 50€</li>
+                        </ul>
+                    </li>
+                    <li><a href="./Confirmation.html"><strong>Vélo éléctrique 3</strong></a>
+                        <ul>
+                            <li>Vélo avec une chance sur deux de mourir. Prix 100€</li>
+                        </ul>
+                    </li>
+                </ul>
+                <h1>Offre de trotinette électrique</h1>
+                <div class="liste"></div>
+                <ul>
+                    <li><a href="./Confirmation.html"><strong>Trotinette 1</strong></a>
+                        <ul>
+                            <li>Vélo de renommé, champion du monde d'inultilité</li>
+                        </ul>
+                    </li>
+                    <li><a href="./Confirmation.html"><strong>Trotinette 2</strong></a>
+                        <ul>
+                            <li>Vélo cheap, pour les pauvres</li>
+                        </ul>
+                    </li>
+                    <li><a href="./Confirmation.html"><strong>Trotinette 3</strong></a>
+                        <ul>
+                            <li>Vélo avec une chance sur deux de mourir</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </main>
+    </body>
+</html>
